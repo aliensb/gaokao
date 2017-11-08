@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>填报情况</title>
+
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/stylesheets/jquery.tooltip/jquery.tooltip.css}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/Index.css" type="text/css"/>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/jquery.tooltip.js}"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+           $("div.item").tooltip();
+        });
+    </script>
+
+</head>
+
+<body>
+<div class="indexNav">
+<div class="row clearfix">
+    <div class="col-md-12 column">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <!--<a th:text="'欢迎：'+${session.user.username}+''" ></a>-->
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1"><span
+                        class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span
+                        class="icon-bar"></span><span class="icon-bar"></span></button>
+                <a class="navbar-brand" href="/" th:text="'首页：'+${session.user.username}+''">Brand</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <form class="navbar-form navbar-left" role="search" action="/find" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="请输入学校名字" name="name"/>
+                    </div>
+                    <button type="submit" class="btn btn-default">查找</button>
+                </form>
+                <ul id="Time" class="nav navbar-nav">
+                    <li>
+                        <iframe class="ifTime" src="/getTime"></iframe>
+                    </li>
+                </ul>
+                <ul id="rNav" class="nav navbar-nav navbar-right">
+                    <!--<input type="text" placeholder="请输入学生名字名字" name="name"/>-->
+                    <!--/*@thymesVar id="stu" type="win.ccav.model.save.StudentEntity"*/-->
+                    <!--<button type="submit" class="btn btn-default stubtn" th:if="${session.stu==null}" >确定</button>-->
+                    <!--<button type="submit" class="btn btn-default stubtn" th:if="${session.stu!=null}">更改学生姓名</button>-->
+                    <!--<spant  th:if="${session.stu==null}" id="stuname">tetet</spant>-->
+                    <!--<spant th:if="${session.stu!=null}" th:text="'学生姓名'+${session.stu.sname}" id="stuname"></spant>-->
+                    <li><a href="/tongji">查看统计</a></li>
+                    <li><a href="/record">查看填报情况</a></li>
+                    <li>
+                        <div class="btn-group" style="float: right">
+                            <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">已选<span id="msg"
+                                                                                                              th:text="${session.length}"> </span>个学校，点击查看
+                                <span class="caret"></span>
+                            </button>
+
+                            <ul class="dropdown-menu" role="menu" id="items">
+
+                                <li><a href="/favorite/compare" class="active">对比</a></li>
+                                <div th:each="item : ${session.allFavorite}">
+                                    <li role="presentation" class="divider"></li>
+                                    <li th:id="${item.id}"><a href="#" th:href="@{/details/{id}(id=${item.id})}" th:text="${item.xuexiaomingcheng}"
+                                                              th:data="${item.id}"></a>
+                                        <button th:id="${item.id}" class="shanchu">删除</button>
+                                    </li>
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+    </div>
+</div>
+</div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>操作老师</th>
+                    <th>学生姓名</th>
+                    <th>文理</th>
+                    <th>学生成绩</th>
+                    <th>第一志愿</th>
+                    <th>第二志愿</th>
+                    <th>第三志愿</th>
+                    <th>第四志愿</th>
+                    <th>第五志愿</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!--/*@thymesVar id="page" type="win.ccav.model.TongjiPage"*/-->
+                <!--/*@thymesVar id="student" type="win.ccav.model.save.StudentEntity"*/-->
+                <tr th:each="student:${page.list}">
+                    <td th:text="${student.id}">id</td>
+                    <td th:text="${student.userName}">id</td>
+                    <td th:text="${student.sname}">name</td>
+                    <td th:text="${student.wenli}">name</td>
+                    <td th:text="${#numbers.formatDecimal(student.score, 1, 0)}">score</td>
+                    <span th:each="xuexiao:${student.ziyuanXuexiaoEntities}">
+                        <td >
+                            <div class="item">
+                                <span th:text="${xuexiao.xuexiaomingcheng}" class="xuexiao"></span>
+                                <div class="tooltip_description" style="display:none" title="专业情况">
+                                    <ol>
+                                        <span th:each="zhuanye:${xuexiao.ziyuanZhuanyeEntities}">
+                                            <li th:text="${zhuanye.zhuanyemingcheng}"></li>
+                                        </span>
+                                    </ol>
+                                </div>
+                            </div>
+                        </td>
+                    </span>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="Footer">
+        <tr>
+            <td colspan="6" align="center" bgcolor="#5BA8DE">
+                <!--/*@thymesVar id="page" type="win.ccav.model.Page"*/-->
+                <span th:text="|共${page.totalRecords}条记录 共${page.totalPages}页 当前第${page.pageNo}页|"></span><br>
+                <a href="/showa" th:href="@{/record/{pageNo}(pageNo=${page.topPageNo})}"><input type="button" name="fristPage"
+                                                                                              value="首页"/></a>
+                <a href="comments.html" th:href="@{/record/{pageNo}(pageNo=${page.previousPageNo})}"
+                   th:if="${page.pageNo==1}"><input
+                        type="button" disabled="disabled" name="previousPage" value="上一页"/></a>
+                <a href="comments.html" th:href="@{/record/{pageNo}(pageNo=${page.previousPageNo})}"
+                   th:if="${page.pageNo!=1}"><input
+                        type="button" name="previousPage" value="上一页"/></a>
+                <a href="comments.html" th:href="@{/record/{pageNo}(pageNo=${page.nextPageNo})}"
+                   th:if="${page.pageNo == page.totalPages}"><input type="button" disabled="disabled" name="nextPage"
+                                                                    value="下一页"/></a>
+                <a href="comments.html" th:href="@{/record/{pageNo}(pageNo=${page.nextPageNo})}"
+                   th:if="${page.pageNo != page.totalPages}"><input type="button" name="nextPage" value="下一页"/></a>
+                <a href="comments.html" th:href="@{/record/{pageNo}(pageNo=${page.bottomPageNo})}"><input type="button"
+                                                                                                        name="lastPage"
+                                                                                                        value="尾页"/></a>
+            </td>
+        </tr>
+    </div>
+</body>
+</html>

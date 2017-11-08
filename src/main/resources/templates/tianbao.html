@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/Index.css" type="text/css"/>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div class="indexNav">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                    <!--<a th:text="'欢迎：'+${session.user.username}+''" ></a>-->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1"><span
+                            class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span
+                            class="icon-bar"></span><span class="icon-bar"></span></button>
+                    <a class="navbar-brand" href="/" th:text="'首页：'+${session.user.username}+''">Brand</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <form class="navbar-form navbar-left" role="search" action="/find" method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="请输入学校名字" name="name"/>
+                        </div>
+                        <button type="submit" class="btn btn-default">查找</button>
+                    </form>
+                    <ul id="Time" class="nav navbar-nav">
+                        <li>
+                            <iframe class="ifTime" src="/getTime"></iframe>
+                        </li>
+                    </ul>
+                    <ul id="rNav" class="nav navbar-nav navbar-right">
+                        <!--<input type="text" placeholder="请输入学生名字名字" name="name"/>-->
+                        <!--/*@thymesVar id="stu" type="win.ccav.model.save.StudentEntity"*/-->
+                        <!--<button type="submit" class="btn btn-default stubtn" th:if="${session.stu==null}" >确定</button>-->
+                        <!--<button type="submit" class="btn btn-default stubtn" th:if="${session.stu!=null}">更改学生姓名</button>-->
+                        <!--<spant  th:if="${session.stu==null}" id="stuname">tetet</spant>-->
+                        <!--<spant th:if="${session.stu!=null}" th:text="'学生姓名'+${session.stu.sname}" id="stuname"></spant>-->
+                        <li><a href="/tongji">查看统计</a></li>
+                        <li><a href="/record">查看填报情况</a></li>
+                        <li>
+                            <div class="btn-group" style="float: right">
+                                <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">已选<span id="msg"
+                                                                                                                  th:text="${session.length}"> </span>个学校，点击查看
+                                    <span class="caret"></span>
+                                </button>
+
+                                <ul class="dropdown-menu" role="menu" id="items">
+
+                                    <li><a href="/favorite/compare" class="active">对比</a></li>
+                                    <div th:each="item : ${session.allFavorite}">
+                                        <li role="presentation" class="divider"></li>
+                                        <li th:id="${item.id}"><a href="#" th:href="@{/details/{id}(id=${item.id})}" th:text="${item.xuexiaomingcheng}"
+                                                                  th:data="${item.id}"></a>
+                                            <button th:id="${item.id}" class="shanchu">删除</button>
+                                        </li>
+                                    </div>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+        </div>
+    </div>
+</div>
+<
+    <div class="container1" id="head">
+        <h3>
+            <a href="/tianbao/details" th:text="'已保存'+${session.saveNum}+'个学校,查看详情'" th:if="${session.saveNum!=null}">已保存0个学校</a>
+            <a  th:text="'已保存0个学校'" th:if="${session.saveNum==null}">已保存0个学校</a>
+        </h3>
+    </div>
+
+        <div class="row1">
+            <!--/*@thymesVar id="xuexiaos" type="java.util.HashSet<win.ccav.model.XuexiaoCompare>"*/-->
+                <div class="rowSon" th:each="xuexiao,xuexiaoIndex:${xuexiaos}">
+                    <h3 th:text="'第'+${xuexiaoIndex.count}+'志愿:'"></h3>
+                    <ul>
+                        <li>学校名称：
+                            <select class="span1" th:value="xuexiao.xuexiaomingcheng"
+                                    th:name="'xuexiaomingcheng'">
+                        <span th:each="xn:${xuexiaos}">
+                        <option th:text="${xn.xuexiaomingcheng}"
+                                th:selected="${xuexiao.xuexiaomingcheng==xn.xuexiaomingcheng}" th:data="${xn.id}" th:value="${xuexiaoIndex.count}"></option>
+                        </span>
+                            </select>
+                        </li>
+                        <li>文&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;理：
+                            <select>
+                                <option th:selected="${xuexiao.wenli=='文科'}">文科</option>
+                                <option th:selected="${xuexiao.wenli=='理科'}">理科</option>
+                            </select>
+                        </li>
+                        <li th:id="'pici'+${xuexiaoIndex.count}">批&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;次：
+                            <select>
+                                <option th:selected="${xuexiao.pici=='本科一批'}">本科一批</option>
+                                <option th:selected="${xuexiao.pici=='本科二批'}">本科二批</option>
+                                <option th:selected="${xuexiao.pici=='专科一批'}">专科一批</option>
+                                <option th:selected="${xuexiao.pici=='专科二批'}">专科二批</option>
+                            </select>
+                            <button class="mybtn" th:data="${xuexiaoIndex.count}">查询</button>
+                        </li>
+
+                        <li class="zhuanye">第1专业：
+                            <select th:name="'zhuanyemingcheng'+${xuexiaoIndex.count}+'1'">
+                        <span th:each="zhuanye:${xuexiao.zhuanyeCompares}">
+                        <option th:text="${zhuanye.zhuanyemingcheng+'['+#numbers.formatDecimal(zhuanye.yucefenshu2017, 1, 0)}+']'" th:data="${zhuanye.id}"></option>
+                        </span>
+                            </select>
+                        </li>
+                        <li class="zhuanye">第2专业：
+                            <select th:name="'zhuanyemingcheng'+${xuexiaoIndex.count}+'2'">
+                        <span th:each="zhuanye:${xuexiao.zhuanyeCompares}">
+                        <option th:text="${zhuanye.zhuanyemingcheng+'['+#numbers.formatDecimal(zhuanye.yucefenshu2017, 1, 0)}+']'" th:data="${zhuanye.id}"></option></option>
+                        </span>
+                            </select>
+                        </li>
+                        <li class="zhuanye">第3专业：
+                            <select th:name="'zhuanyemingcheng'+${xuexiaoIndex.count}+'3'">
+                        <span th:each="zhuanye:${xuexiao.zhuanyeCompares}">
+                      <option th:text="${zhuanye.zhuanyemingcheng+'['+#numbers.formatDecimal(zhuanye.yucefenshu2017, 1, 0)}+']'" th:data="${zhuanye.id}"></option></option>
+                        </span>
+                            </select>
+                        </li>
+                        <li class="zhuanye">第4专业：
+                            <select th:name="'zhuanyemingcheng'+${xuexiaoIndex.count}+'4'">
+                        <span th:each="zhuanye:${xuexiao.zhuanyeCompares}">
+                      <option th:text="${zhuanye.zhuanyemingcheng+'['+#numbers.formatDecimal(zhuanye.yucefenshu2017, 1, 0)}+']'" th:data="${zhuanye.id}"></option></option>
+                        </span>
+                            </select>
+                        </li>
+                        <li class="zhuanye">第5专业：
+                            <select th:name="'zhuanyemingcheng'+${xuexiaoIndex.count}+'5'">
+                        <span th:each="zhuanye:${xuexiao.zhuanyeCompares}">
+                        <option th:text="${zhuanye.zhuanyemingcheng+'['+#numbers.formatDecimal(zhuanye.yucefenshu2017, 1, 0)}+']'" th:data="${zhuanye.id}"></option></option>
+                        </span>
+                            </select>
+                        </li>
+                        <li class="zhuanye">第6专业：
+                            <select th:name="'zhuanyemingcheng'+${xuexiaoIndex.count}+'6'">
+                        <span th:each="zhuanye:${xuexiao.zhuanyeCompares}">
+                        <option th:text="${zhuanye.zhuanyemingcheng+'['+#numbers.formatDecimal(zhuanye.yucefenshu2017, 1, 0)}+']'" th:data="${zhuanye.id}"></option></option>
+                        </span>
+                            </select>
+                        </li>
+                        <li>
+                            <button class="baocun" th:data="${xuexiaoIndex.count}">保存</button>
+                        </li>
+                    </ul>
+                </div>
+        </div>
+    <script type="application/javascript">
+        $(function () {
+            $(".mybtn").click(function () {
+                var pici = $(this).prev().find("option:selected").text();
+                var wenli = $(this).parent().prev().find("option:selected").text();
+                var xuexiaomingcheng = $(this).parent().prev().prev().find("option:selected").text();
+                var next = $(this).parent().parent();
+                var piciid=$(this).attr("data");
+                var btn=$("#pici"+piciid)
+                var zhuanye = next.find("li.zhuanye");
+                zhuanye.remove();
+                $.ajax({
+                    type: "post",
+                    url: "/favorite/getZhuanyes",
+                    data: {
+                        xuexiaomingcheng: xuexiaomingcheng,
+                        wenli: wenli,
+                        pici: pici
+                    },
+                    success: function (data) {
+                        if (data.length == 0) {
+                            alert("没有对应的信息，请重新再试");
+                        }
+                        else {
+                            for (i = 1; i <= 6; i++) {
+                                var li = '<li class="zhuanye">' + '第' + i + '专业:';
+                                var html = '<select class="">';
+                                for (var j = 0; j < data.length; j++) {
+                                    html += "<option data=" + data[j].id + ">" + data[j].zhuanyemingcheng + "</option>";
+                                }
+                                html += "</select></li>";
+                                var out = li + html;
+                                btn.after(out);
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("查询失败，请重新再试~")
+                    }
+                })
+            })
+            $("#stusave").click(function () {
+                var sname = $("#sname").val();
+                var score = $("#score").val();
+                var stuform = $("#stuform");
+                var ht = $("#head");
+                $.ajax({
+                    type: "post",
+                    url: "/stu/add",
+                    data: {
+                        sname: sname,
+                        score: score,
+                    },
+                    success: function (data) {
+                        stuform.remove();
+                        ht.html('<a href="/tianbao/details/">学生名字：'+sname+' 成绩：'+score+'查看详情</a>');
+
+                    },
+                    error: function () {
+                        alert("保存失败，请重新再试~")
+                    }
+                })
+            })
+            $(".baocun").click(function () {
+                var ziyuanOrder=$(this).attr("data");
+                var zhuanye6=$(this).parent().prev().find("option:selected").text();
+                var zhuanye6id=$(this).parent().prev().find("option:selected").attr("data");
+                var zhuanye5=$(this).parent().prev().prev().find("option:selected").text();
+                var zhuanye5id=$(this).parent().prev().prev().find("option:selected").attr("data");
+                var zhuanye4=$(this).parent().prev().prev().prev().find("option:selected").text();
+                var zhuanye4id=$(this).parent().prev().prev().prev().find("option:selected").attr("data");
+                var zhuanye3=$(this).parent().prev().prev().prev().prev().find("option:selected").text();
+                var zhuanye3id=$(this).parent().prev().prev().prev().prev().find("option:selected").attr("data");
+                var zhuanye2=$(this).parent().prev().prev().prev().prev().prev().find("option:selected").text();
+                var zhuanye2id=$(this).parent().prev().prev().prev().prev().prev().find("option:selected").attr("data");
+                var zhuanye1=$(this).parent().prev().prev().prev().prev().prev().prev().find("option:selected").text();
+                var zhuanye1id=$(this).parent().prev().prev().prev().prev().prev().prev().find("option:selected").attr("data");
+                var xuexiaomingcheng=$(this).parent().prev().prev().prev().prev().prev().prev().prev().prev().prev().find("option:selected").text();
+                var xuexiaoid=$(this).parent().prev().prev().prev().prev().prev().prev().prev().prev().prev().find("option:selected").attr("data");
+                var xuexiaoorder=$(this).parent().prev().prev().prev().prev().prev().prev().prev().prev().prev().find("option:selected").attr("value");
+                var msg=$(".mymsg");
+                var count=msg.val();
+                var ht = $("#head");
+                $.ajax({
+                    type: "post",
+                    url: "/tiaobao/save",
+                    data: {
+                        zhuanye1: zhuanye1,
+                        zhuanye1id: zhuanye1id,
+                        zhuanye2: zhuanye2,
+                        zhuanye2id: zhuanye2id,
+                        zhuanye3: zhuanye3,
+                        zhuanye3id: zhuanye3id,
+                        zhuanye4: zhuanye4,
+                        zhuanye4id: zhuanye4id,
+                        zhuanye5: zhuanye5,
+                        zhuanye5id: zhuanye5id,
+                        zhuanye6: zhuanye6,
+                        zhuanye6id: zhuanye6id,
+                        xuexiaomingcheng:xuexiaomingcheng,
+                        xuexiaoid:xuexiaoid,
+                        xuexiaoorder:xuexiaoorder,
+                        ziyuanOrder:ziyuanOrder
+                    },
+                    success: function (data) {
+                        count++;
+                        msg.text("以保存"+count+"个志愿");
+                        msg.val(count);
+                        ht.html('<h3><a href="/tianbao/details/">以保存'+data+'个学校,查看详情</a></h3>');
+                        alert("保存成功")
+                    },
+                    error: function () {
+                        alert("保存失败，请重新再试~")
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+</html>

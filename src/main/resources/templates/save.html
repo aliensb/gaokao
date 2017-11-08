@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>保存成功</title>
+</head>
+<body>
+<script type="text/javascript">
+    var t=3;//设定跳转的时间
+    setInterval("refer()",1000);
+    function refer(){
+        if(t==0){
+            window.location.href='/';
+        }
+        document.getElementById('show').innerHTML="保存成功"+t+"秒后跳转到首页";
+        t--;
+    }
+</script>
+<span id="show"></span>
+</body>
+</html>

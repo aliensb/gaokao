@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用户登录</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/Login.css" type="text/css"/>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.css"type="text/css"/>
+</head>
+
+<body>
+<div id="page_bg"
+     style="background:  0px 0px;"></div>
+<div id="dialog"
+     style="background: rgb(188, 188, 188); width: 40%; height: 50%; position: absolute; left: 461px; top: 177.5px;">
+    <div id="dialog_head">
+        <p>用户登录
+        <p>
+    </div>
+    <form action="/login" method="post">
+        <div id="dialog_from">
+            <div class="input-group  input-group-lg"
+                 style="position: absolute;top:10%" id="dialog_username">
+                <span class="input-group-addon" id="basic-addon1">账号:</span> <input
+                    type="text" class="form-control" placeholder="Username"
+                    aria-describedby="basic-addon1" name="username"
+                    autofocus="autofoucs" id="username" maxlength="20">
+            </div>
+            <div class="input-group  input-group-lg"
+                 style="position: absolute;top: 25%;" id="dialog_password">
+                <span class="input-group-addon" id="basic-addon2">密码:</span> <input
+                    type="password" class="form-control" placeholder="Password"
+                    aria-describedby="basi
+					c-addon1" name="password" id="password"
+                    maxlength="20">
+            </div>
+
+            <div class="input-group  input-group-lg"
+                 style="position: absolute;top: 40%;" id="dialog_vilidate">
+                <span class="input-group-addon" id="basic-addon3">验证码:</span> <input
+                    type="text" class="form-control" placeholder="VilidateCode"
+                    aria-describedby="basic-addon1" name="vilidate" id="vilidate"
+                    maxlength="20" onkeyup=" if(event.keyCode==13)login(); ">
+                <img alt="验证码" src="/code" onclick="changeCode()" id="code"
+                     style="position: absolute;left: 100%; width: 28%;height: 100%;" >
+            </div>
+
+            <div id="dialog_submit">
+                <input type="button" id="submit" class="btn btn-info"
+                       value="登陆" onclick="login();">
+            </div>
+        </div>
+    </form>
+</div>
+<div id="dialog_footer">
+    <p>Copyright (C)2016</p>
+</div>
+<script type="text/javascript" src="/js/Login.js"></script>
+<script type="text/javascript">
+    function login() {
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var vilidate = $("#vilidate").val();
+
+
+        if (username == "" || username == null) {
+            $("#username").focus();
+            alert("请输入用户名");
+            return;
+        }
+
+        if (password == "" || password == null) {
+            $("#password").focus();
+            alert("请输入密码");
+            return;
+        }
+
+        if(vilidate == "" || vilidate == null){
+            $("#vilidate").focus();
+            return;
+        }
+        document.getElementById("submit").value="登陆中...";
+
+        $.ajax({
+            type : "post",
+            url : "/logincheck",
+            data : {
+                "username" : username,
+                "password" : password,
+                "vilidate" : vilidate
+            },
+            success : function(res) {
+                if (res.result) {
+                    //alert(res.msg);
+                    window.location.href='/';
+                } else{
+                    $("#username").select();
+                    $("#password").val("");
+                    alert(res.msg);
+                    window.location.reload();
+                }
+            }
+        });
+    }
+    function genTimestamp() {
+        var time = new Date();
+        return time.getTime();
+    }
+    function changeCode() {
+
+        $("#code").attr("src", "code?t=" + genTimestamp());
+    }
+
+</script>
+</body>
+</html>

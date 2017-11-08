@@ -1,0 +1,13 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="guru.springframework.controllers" level="WARN" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="guru.springframework.helpers" level="WARN" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="org.hibernate.type" level="DEBUG" />
+    <logger name="org.hibernate" level="DEBUG" />
+</configuration>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"></meta>
+    <meta name="viewport" content="width=device-width,initial-scale=1"></meta>
+
+    <title>计时</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .time {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            /*padding: 200px;*/
+            margin: auto;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<div class="time">
+    <!--    <span id="t_d">00天</span> -->
+    <span id="t_h">00时</span>
+    <span id="t_m">00分</span>
+    <span id="t_s">00秒</span>
+<!--这就是页面，和刚才那个方法挂钩的，那个方法返回的是time,然后加了两个数据，这个页面就要去取方法里面加的数据，并渲染，最后反给浏览器//-->
+</div>
+<script type="application/javascript" src="/js/jquery.min.js"></script>
+<script>
+    var startTime = [[${nowTime}]];
+    var endTime = [[${endTime}]];
+
+    var stopTime = new Date(endTime);
+    var start = new Date(startTime)
+    var timeLast = stopTime.getTime() - start.getTime();
+    function GetRTime() {
+        if (timeLast >= 0) {
+            d = Math.floor(timeLast / 1000 / 60 / 60 / 24);
+            h = Math.floor(timeLast / 1000 / 60 / 60 % 24);
+            m = Math.floor(timeLast / 1000 / 60 % 60);
+            s = Math.floor(timeLast / 1000 % 60);
+        }
+        document.getElementById("t_h").innerHTML = h + "时";
+        document.getElementById("t_m").innerHTML = m + "分";
+        document.getElementById("t_s").innerHTML = s + "秒";
+        timeLast=timeLast-1000
+    }
+    setInterval(GetRTime, 1000);
+</script>
+
+</body>
+</html>

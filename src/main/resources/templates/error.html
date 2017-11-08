@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>m没有相应的数据</title>
+</head>
+<body>
+<script type="text/javascript">
+    var t=3;//设定跳转的时间
+    setInterval("refer()",1000);
+    function refer(){
+        if(t==0){
+            window.location.href='/';
+        }
+        document.getElementById('show').innerHTML="无查询数据"+t+"秒后跳转到首页";
+        t--;
+    }
+</script>
+<span id="show"></span>
+<!--/*@thymesVar id="errormsg" type="java.lang.String"*/-->
+<h1 th:text="${errormsg}"></h1>
+</body>
+</html>

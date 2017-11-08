@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/Index.css" type="text/css"/>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div class="indexNav">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                    <!--<a th:text="'欢迎：'+${session.user.username}+''" ></a>-->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1"><span
+                            class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span
+                            class="icon-bar"></span><span class="icon-bar"></span></button>
+                    <a class="navbar-brand" href="/" th:text="'首页：'+${session.user.username}+''">Brand</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <form class="navbar-form navbar-left" role="search" action="/find" method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="请输入学校名字" name="name"/>
+                        </div>
+                        <button type="submit" class="btn btn-default">查找</button>
+                    </form>
+                    <ul id="Time" class="nav navbar-nav">
+                        <li>
+                            <iframe class="ifTime" src="/getTime"></iframe>
+                        </li>
+                    </ul>
+                    <ul id="rNav" class="nav navbar-nav navbar-right">
+                        <div class="btn-group" style="float: right">
+                            <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">已选<span id="msg"
+                                                                                                              th:text="${session.length}"> </span>个学校，点击查看
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" id="items">
+                                <li><a href="/favorite/compare" class="active">对比</a></li>
+                                <div th:each="item : ${session.allFavorite}">
+                                    <li role="presentation" class="divider"></li>
+                                    <li><a href="#" th:text="${item.xuexiaomingcheng}"></a>
+                                        <button th:id="${item.id}" class="shanchu">删除</button>
+                                    </li>
+                                </div>
+                            </ul>
+                        </div>
+                    </ul>
+                </div>
+
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-4 column">
+        </div>
+        <div class="col-md-4 column">
+            <form class="form-horizontal" role="form" action="/tianbao/insert" method="post">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">学生姓名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputEmail3" name="stuname"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label">成绩</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputPassword3" name="stuscore" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label">文理</label>
+                    <div class="col-sm-10">
+
+                        <select name="wenli" class="form-control">
+                            <option>理科</option>
+                            <option>文科</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 column">
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <!--/*@thymesVar id="student" type="win.ccav.model.save.StudentEntity"*/-->
+        <div class="col-md-4" th:each="xuexiao,xuexiaoIndex:${session.xuexiaoMap}">
+            <h3 th:text="'第'+${xuexiaoIndex.count}+'志愿:'"></h3>
+            <ul>
+                <li th:text="'学校名称：'+${xuexiao.value.xuexiaomingcheng}">学校名称：
+                </li>
+                <span th:each="zhuanye,zhuanyeIndex:${xuexiao.value.ziyuanZhuanyeEntities}">
+                <li class="zhuanye" th:text="'第'+${zhuanyeIndex.count}+'专业：'+${zhuanye.zhuanyemingcheng}">第1专业：
+                </li>
+                </span>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

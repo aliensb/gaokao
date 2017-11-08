@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+</head>
+<body>
+<span>姓名:</span><input type="text"  id="username">
+<span>密码:</span><input type="text"  id="password">
+<span>确认密码:</span><input type="text" id="password1">
+<button id="btn">提交</button>
+<script>
+    $("#password1").blur(function () {
+
+    })
+    $("#btn").click(function () {
+        if($("#password").val()!=$("#password1").val()){
+            alert("两次密码不一致");
+            return false;
+        }
+        regist($("#username").val(),$("#password").val())
+
+    })
+    function regist(username,password) {
+        $.ajax({
+            type: "post",
+            url: "/registUser",
+            data: {
+                username: username,
+                password:password
+            },
+            success: function (data) {
+                if(data!='ok'){
+                    alert(data)
+                }else {
+                    alert("注册成功，请联系老师开通使用权限")
+                }
+
+            },
+            error: function () {
+                alert("注册失败，请重新再试~")
+            }
+        })
+    }
+</script>
+</body>
+</html>

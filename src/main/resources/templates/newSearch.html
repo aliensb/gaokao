@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/Index.css" type="text/css"/>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div class="indexNav">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                    <!--<a th:text="'欢迎：'+${session.user.username}+''" ></a>-->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1"><span
+                            class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span
+                            class="icon-bar"></span><span class="icon-bar"></span></button>
+                    <a class="navbar-brand" href="/" th:text="'首页：'+${session.user.username}+''">Brand</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <form class="navbar-form navbar-left" role="search" action="/find" method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="请输入学校名字" name="name"/>
+                        </div>
+                        <button type="submit" class="btn btn-default">查找</button>
+                    </form>
+                    <form class="navbar-form navbar-left" role="search" action="/zhuanyefind" method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="请输入专业名称" name="name"/>
+                        </div>
+                        <button type="submit" class="btn btn-default">查找</button>
+                    </form>
+                    <ul id="Time" class="nav navbar-nav">
+                        <li>
+                            <iframe class="ifTime" src="/getTime"></iframe>
+                        </li>
+                    </ul>
+                    <ul id="rNav" class="nav navbar-nav navbar-right">
+                        <!--<input type="text" placeholder="请输入学生名字名字" name="name"/>-->
+                        <!--/*@thymesVar id="stu" type="win.ccav.model.save.StudentEntity"*/-->
+                        <!--<button type="submit" class="btn btn-default stubtn" th:if="${session.stu==null}" >确定</button>-->
+                        <!--<button type="submit" class="btn btn-default stubtn" th:if="${session.stu!=null}">更改学生姓名</button>-->
+                        <!--<spant  th:if="${session.stu==null}" id="stuname">tetet</spant>-->
+                        <!--<spant th:if="${session.stu!=null}" th:text="'学生姓名'+${session.stu.sname}" id="stuname"></spant>-->
+                        <li><a href="/tongji">查看统计</a></li>
+                        <li><a href="/record">填报情况</a></li>
+                        <li>
+                            <div class="btn-group" style="float: right">
+                                <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">已选<span id="msg"
+                                                                                                                  th:text="${session.length}"> </span>个学校，点击查看
+                                    <span class="caret"></span>
+                                </button>
+
+                                <ul class="dropdown-menu" role="menu" id="items">
+
+                                    <li><a href="/favorite/compare" class="active">对比</a></li>
+                                    <div th:each="item : ${session.allFavorite}">
+                                        <li role="presentation" class="divider"></li>
+                                        <li th:id="${item.id}"><a href="#" th:href="@{/details/{id}(id=${item.id})}" th:text="${item.xuexiaomingcheng}"
+                                                                  th:data="${item.id}"></a>
+                                            <button th:id="${item.id}" class="shanchu">删除</button>
+                                        </li>
+                                    </div>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!--高级查询-->
+        <form action="/newSearch" method="get" style="display: inline">
+            成绩:<input type="text" placeholder="请输入学生成绩" name="stuScore">
+            波动值：<input type="text" placeholder="请输入波动值" name="scoreBodong">
+            位次: <!--/*@thymesVar id="stuweoco" type="java.lang.String"*/-->
+            <input type="text" placeholder="请输入学生位次" name="stuWeici"  >
+            <!--/*@thymesVar id="bodongzhi" type="java.lang.String"*/-->
+            波动值: <input type="text" placeholder="请输入波动值" name="weiciBodong">
+            <!--省份： <select name="shengfen" id="shen">-->
+            学校名称: <input type="text" placeholder="请输入学校名称" name="xName">
+            <br>
+            <br>
+            专业名称: <input type="text" placeholder="请输入专业名称" name="zName">
+
+            <!--</select>-->
+            省份：<!--/*@thymesVar id="page" type="win.ccav.model.Page"*/-->
+            <select name="shenfen" id="shen">
+                <option value="不限">不限</option>
+                <span th:each="diqu : ${page.diqu}">
+            <!--/*@thymesVar id="diqu" type="win.ccav.model.XuexiaoEntity"*/-->
+         <!--/*@thymesVar id="diqu" type="java.lang.String"*/-->
+         <option value="不限" th:text="${diqu.diqu}" th:value="${diqu.diqu}">不限</option>
+        </span>
+            </select>
+            </select>
+            城市：<select name="chengshi" id="chengshi">
+            <option value="不限">不限</option>
+        </select>
+            批次: <select name="pici">
+            <option value="本科一批">本科一批</option>
+            <option value="本科二批">本科二批</option>
+            <option value="专科一批">专科一批</option>
+            <option value="专科二批">专科二批</option>
+        </select>
+            类型：
+            <select name="leixing" >
+                <option value="buxian">不限</option>
+                <option value="体育">体育</option>
+                <option value="农业">农业</option>
+                <option value="农林">农林</option>
+                <option value="医药">医药</option>
+                <option value="工科">工科</option>
+                <option value="师范">师范</option>
+                <option value="政法">政法</option>
+                <option value="林业">林业</option>
+                <option value="民族">民族</option>
+                <option value="综合">综合</option>
+                <option value="艺术">艺术</option>
+                <option value="综合">综合</option>
+                <option value="语言">语言</option>
+                <option value="财经">财经</option>
+            </select>
+            <input type="radio" name="wenli" value="文科" checked>文科<input type="radio" name="wenli" value="理科">理科
+
+
+            办学性质: <select name="banxuexingzhi">
+            <option value="不限">不限</option>
+            <span th:each="banxuexingzhi : ${page.banxuexingzhi}">
+            <!--/*@thymesVar id="diqu" type="win.ccav.model.XuexiaoEntity"*/-->
+         <option value="不限" th:text="${banxuexingzhi}" th:value="${banxuexingzhi}">不限</option>
+        </span>
+
+        </select>
+
+            排序方式: <select name="sort">
+            <option value="fendesc">预测分降序</option>
+            <option value="fenasc">预测分升序</option>
+            <option value="bodesc">预测位次降序</option>
+            <option value="boasc">预测位次升序</option>
+        </select>
+            <input type="submit" value="筛选">
+        </form>
+    </div>
+
+</div>
+
+</body>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        //异步加载某个省份对应的城市列表
+        $("#shen").change(function () {
+            var selectedProvence = $("#shen").val();
+            var sel = $("#chengshi")
+            sel.empty();
+            $.ajax({
+                type: 'POST',
+                url: "/getchen",
+                data: "shengfen=" + selectedProvence,
+                success: function (data) {
+                    var sel = $("#chengshi")
+                    sel.append('<option value="不限">不限</option>');
+                    for (i = 0; i < data.length; i++) {
+                        sel.append('<option value="' + data[i] + '">' + data[i] + '</option>');
+                    }
+                },
+                error: function () {
+                    return -1;
+                },
+                dataType: "json"
+            });
+        });
+        $("#shen2").change(function () {
+            var selectedProvence = $("#shen2").val();
+            var sel = $("#chengshi2")
+            sel.empty();
+            $.ajax({
+                type: 'POST',
+                url: "/getchen",
+                data: "shengfen=" + selectedProvence,
+                success: function (data) {
+                    var sel = $("#chengshi2")
+                    sel.append('<option value="不限">不限</option>');
+                    for (i = 0; i < data.length; i++) {
+                        sel.append('<option value="' + data[i] + '">' + data[i] + '</option>');
+                    }
+                },
+                error: function () {
+                    return -1;
+                },
+                dataType: "json"
+            });
+        });
+        //加入候选列表
+        $(".duibi").click(function () {
+            var xuexiaomingcheng = $(this).attr("data");
+            var id = $(this).attr("value");
+            var out = $("#msg");
+
+            $.ajax({
+                type: "post",
+                url: "/favorite/add",
+                data: {
+                    id: id,
+                    xuexiaomingcheng: xuexiaomingcheng
+                },
+                success: function (data) {
+                    if (data.added == false) {
+                        //有重复的的数据。添加失败
+                        alert(data.msg);
+                    }
+                    else {
+                        out.text(data.len);
+                        //$("#items").append('');
+                        $("#items").append('<div><li role="presentation" class="divider"></li><li><a href="#">' + xuexiaomingcheng + '</a><button id=' + id + ' class="shanchu">删除</button></li></div>')
+                    }
+
+                },
+                error: function () {
+                    alert("添加异常，请重新再试~")
+                }
+            })
+            return false;
+        });
+
+        $(".shanchu").click(function () {
+            var sele = $(this).parent().parent();
+            var out = $("#msg");
+            var key = $(this).attr("id");
+            $.ajax({
+                type: "post",
+                url: "/favorite/remove",
+                data: {
+                    id: key
+                },
+                success: function (data) {
+                    if (data.added == true) {
+                        sele.remove();
+                        out.text(data.len);
+                        alert(data.msg);
+                    }
+                },
+                error: function () {
+                    alert("删除异常，请重新再试~")
+                }
+            })
+        })
+        $(".stubtn").click(function () {
+            var input=$(this).prev().val();
+            var stuname=$("#stuname");
+            $.ajax({
+                type: "post",
+                url: "/stu/add",
+                data: {
+                    sname: input
+                },
+                success: function (data) {
+                    if (data== false) {
+                        alert("请输入学生名字");
+                    }
+                    else {
+                        stuname.text('学生名字'+input);
+                        //$("#items").append('');
+                        //$("#items").append('<div><li role="presentation" class="divider"></li><li><a href="#">' + xuexiaomingcheng + '</a><button id=' + id + ' class="shanchu">删除</button></li></div>')
+                    }
+
+                },
+                error: function () {
+                    alert("添加异常，请重新再试~")
+                }
+            })
+        })
+    });
+
+
+</script>
+</html>

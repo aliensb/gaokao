@@ -1,0 +1,251 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/Index.css" type="text/css"/>
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $(".mybtn").click(function () {
+                var p = $(this).parent().parent().parent();
+                p.children(".added").remove();
+                var xuexiaomingcheng = $(this).attr("value");
+                var wenli = $(this).parent().parent().prev().prev().find("option:selected").text();
+                var pici = $(this).parent().parent().prev().find("option:selected").text();
+                var id = $(this).prev().find("option:selected").attr("id");
+                //$('#testSelect option:selected').text()
+                $.ajax({
+                    type: "post",
+                    url: "/favorite/getDetails",
+                    data: {
+                        id: id
+//                        xuexiaomingcheng:xuexiaomingcheng,
+//                        wenli:wenli,
+//                        pici:pici
+                    },
+                    success: function (data) {
+                        p.append('<tr class="added"><td>' + data.shuobodian + '</td></tr>');
+                        p.append('<tr class="added"><td>' + data.xuekezhongdian + '</td></tr>');
+                        p.append('<tr class="added"><td>' + data.fenshu2014 + '</td></tr>');
+                        p.append('<tr class="added"><td>' + data.fenshu2015 + '</td></tr>');
+                        p.append('<tr class="added"><td>' + data.fenshu2016 + '</td></tr>');
+                        p.append('<tr class="added"><td>' + data.yucefenshu2017 + '</td></tr>');
+                        p.append('<tr class="added"><td>' + data.weici2014 + '</td></tr>');
+                        p.append('<tr class="added"><td>' + data.weici2015 + '</td></tr>');
+                        p.append('<tr class="added"><td>' + data.weici2016 + '</td></tr>');
+                        p.append('<tr class="added"><td>' + data.yuceweici2017 + '</td></tr>');
+                    },
+                    error: function () {
+                        alert("查询失败，请重新再试~")
+                    }
+                })
+            })
+            $(".shanchuxuexiao").click(function () {
+                var ss1 = $(this).attr("school");
+                alert(ss1);
+            })
+            $(".getzhuan").click(function () {
+                var sele = $(this).prev();
+                var p = $(this).parent().parent().parent();
+                p.children(".added").remove();
+                var pici = sele.val();
+                var xuexiaomingcheng = sele.parent().parent().prev().find("option:selected").attr("data");
+                var wenli = sele.parent().parent().prev().find("option:selected").text();
+                var zhuanye = sele.parent().parent().next().find("th>select")
+                zhuanye.empty();
+                $.ajax({
+                    type: "post",
+                    url: "/favorite/getZhuanyes",
+                    data: {
+                        xuexiaomingcheng: xuexiaomingcheng,
+                        wenli: wenli,
+                        pici: pici
+                    },
+                    success: function (data) {
+                        for (i = 0; i < data.length; i++) {
+
+                            zhuanye.append('<option id="' + data[i].id + '">' + data[i].zhuanyemingcheng + '</option>');
+                        }
+                    },
+                    error: function () {
+                        alert("查询失败，请重新再试~")
+                    }
+                })
+
+            })
+            $(".shanchucom").click(function () {
+                var id = $(this).attr("data");
+                var out = $("#msg");
+                var table = $(this).parent().parent().parent().parent();
+                var li=$('#'+id);
+
+                $.ajax({
+                    type: "post",
+                    url: "/favorite/remove",
+                    data: {
+                        id: id
+                    },
+                    success: function (data) {
+                        if (data.added == true) {
+                            li.remove();
+                            table.remove();
+                            out.text(data.len);
+                            alert(data.msg);
+                        }
+                    },
+                    error: function () {
+                        alert("删除异常，请重新再试~")
+                    }
+                })
+            })
+        })
+    </script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div class="indexNav">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                    <!--<a th:text="'欢迎：'+${session.user.username}+''" ></a>-->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1"><span
+                            class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span
+                            class="icon-bar"></span><span class="icon-bar"></span></button>
+                    <a class="navbar-brand" href="/" th:text="'首页：'+${session.user.username}+''">Brand</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <form class="navbar-form navbar-left" role="search" action="/find" method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="请输入学校名字" name="name"/>
+                        </div>
+                        <button type="submit" class="btn btn-default">查找</button>
+                    </form>
+                    <ul id="Time" class="nav navbar-nav">
+                        <li>
+                            <iframe class="ifTime" src="/getTime"></iframe>
+                        </li>
+                    </ul>
+                    <ul id="rNav" class="nav navbar-nav navbar-right">
+                        <!--<input type="text" placeholder="请输入学生名字名字" name="name"/>-->
+                        <!--/*@thymesVar id="stu" type="win.ccav.model.save.StudentEntity"*/-->
+                        <!--<button type="submit" class="btn btn-default stubtn" th:if="${session.stu==null}" >确定</button>-->
+                        <!--<button type="submit" class="btn btn-default stubtn" th:if="${session.stu!=null}">更改学生姓名</button>-->
+                        <!--<spant  th:if="${session.stu==null}" id="stuname">tetet</spant>-->
+                        <!--<spant th:if="${session.stu!=null}" th:text="'学生姓名'+${session.stu.sname}" id="stuname"></spant>-->
+                        <li><a href="/tongji">查看统计</a></li>
+                        <li><a href="/record">查看填报情况</a></li>
+                        <li><a href="/tianbao">开始填报</a></li>
+                        <li>
+                            <div class="btn-group" style="float: right">
+                                <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">已选<span id="msg"
+                                                                                                                  th:text="${session.length}"> </span>个学校，点击查看
+                                    <span class="caret"></span>
+                                </button>
+
+                                <ul class="dropdown-menu" role="menu" id="items">
+
+                                    <li><a href="/favorite/compare" class="active">对比</a></li>
+                                    <div th:each="item : ${session.allFavorite}">
+                                        <li role="presentation" class="divider"></li>
+                                        <li th:id="${item.id}"><a href="#" th:href="@{/details/{id}(id=${item.id})}" th:text="${item.xuexiaomingcheng}"
+                                                                  th:data="${item.id}"></a>
+                                            <button th:id="${item.id}" class="shanchu">删除</button>
+                                        </li>
+                                    </div>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="comTable">
+<!--/*@thymesVar id="xuexiaos" type="java.util.List<XuexiaoCompare>"*/-->
+<table border="1" cellpadding="0" style="float: left" th:each="xuexiao:${xuexiaos}">
+
+    <tr>
+        <!--/*@thymesVar id="xuexiao" type="win.ccav.model.XuexiaoCompare"*/-->
+        <td>招生代码</td>
+        <th th:text="${xuexiao.zhaoshengdaima}">${school.xuexiaomingcheng}</th>
+    </tr>
+    <tr>
+        <td><button>学校名称</button></td>
+        <th><span th:text="${xuexiao.xuexiaomingcheng}"></span>
+            <button th:data="${xuexiao.id}" class="shanchucom">删除</button>
+        </th>
+    </tr>
+    <tr>
+        <td>级别</td>
+        <th th:text="${xuexiao.jibie}">${jibie[school.primaryKey]}</th>
+    </tr>
+    <tr>
+        <td>地区</td>
+        <th th:text="${xuexiao.diqu}">${chengshi[school.primaryKey]}</th>
+    </tr>
+    <tr>
+        <td>城市</td>
+        <th th:text="${xuexiao.chengshi}">${chengshi[school.primaryKey]}</th>
+    </tr>
+    <tr>
+        <td>办学性质</td>
+        <th th:text="${xuexiao.banxuexingzhi}">${chengshi[school.primaryKey]}</th>
+    </tr>
+
+    <tr>
+        <td>预测分2017</td>
+        <th th:text="${#numbers.formatDecimal(xuexiao.yucefenshu2017, 1, 0)}">${chengshi[school.primaryKey]}</th>
+    </tr>
+    <tr>
+        <td>预测位次2017</td>
+        <th th:text="${#numbers.formatDecimal(xuexiao.yuceweici2017, 1, 0)}">${chengshi[school.primaryKey]}</th>
+    </tr>
+
+    <tr>
+        <td>文理</td>
+        <th>
+            <select>
+                <option th:selected="'文科'==${xuexiao.wenli}" th:data="${xuexiao.xuexiaomingcheng}">文科</option>
+                <option th:selected="'理科'==${xuexiao.wenli}" th:data="${xuexiao.xuexiaomingcheng}">理科</option>
+            </select>
+        </th>
+    </tr>
+    <tr>
+        <td><button>批次</button></td>
+        <th>
+            <select class="pici">
+                <option th:selected="'本科一批'==${xuexiao.pici}">本科一批</option>
+                <option th:selected="'本科二批'==${xuexiao.pici}">本科二批</option>
+                <option th:selected="'专科一批'==${xuexiao.pici}">专科一批</option>
+                <option th:selected="'专科二批'==${xuexiao.pici}">专科二批</option>
+            </select>
+            <button class="getzhuan">查询</button>
+        </th>
+    </tr>
+
+    <tr>
+        <td>专业</td>
+        <th>
+            <select>
+                        <span th:each="zhuanye:${xuexiao.zhuanyeCompares}">
+                        <option th:text="${zhuanye.zhuanyemingcheng}"
+                                th:id="${zhuanye.id}">${zhuanye.zhuanyemingcheng}</option>
+                    </span>
+            </select>
+            <button class="mybtn">查询</button>
+        </th>
+    </tr>
+</table>
+</div>
+</body>
+
+</html>
