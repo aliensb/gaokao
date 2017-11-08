@@ -36,7 +36,7 @@ public class RedisConfig {
     }
     @Bean
     public JedisPool jedisPool(){
-        JedisPool jedisPool=new JedisPool(jedisPoolConfig(),"123.207.107.191",6379,2000,"a110120119");
+        JedisPool jedisPool=new JedisPool(jedisPoolConfig(),"123.000.107.191",6379,2000,"123456");
         return jedisPool;
     }
 }
